@@ -1,11 +1,9 @@
 import requests
 
+
+
 # 1. 获取访问令牌
-def get_access_token(client_id, client_secret, tenant_id):
-    # 配置 Keycloak 信息
-    auth_url = "http://keycloak.osdu.rewant.cn/realms/osdu/protocol/openid-connect/token"
-    client_id = "osdu-admin"
-    client_secret = "hsN7IM8AGLTSBksQ"
+def get_access_token(auth_url, client_id, client_secret):
     # 发送请求
     try:
         response = requests.post(
@@ -50,7 +48,7 @@ def create_well(token, partition_id):
         }
     }
     
-    storage_url = "https://<OSDU_ENDPOINT>/api/storage/v2/records"
+    storage_url = f"https://{OSDU_ENDPOINT}/api/storage/v2/records"
     response = requests.post(storage_url, json={"records": [well_data]}, headers=headers)
     
     if response.status_code == 201:
@@ -67,17 +65,20 @@ def create_wellbore(token, partition_id, well_id):
     }
     
     wellbore_data = {
-        "kind": "osdu:wks:wellbore--Wellbore:1.0.0",
+        "kind": "osdu:wks:wellbore--Wellbore:1.0.0", # Wellbore类型标识
         "acl": {"viewers": [f"data.default.viewers@{partition_id}"]},
-        "legal": {"legaltags": ["global-public-1"], "otherRelevantDataCountries": ["US"]},
+        "legal": {
+            "legaltags": ["global-public-1"], 
+            "otherRelevantDataCountries": ["US"]
+        },
         "data": {
-            "WellboreName": "2G163-41-Wellbore-1",
+            "WellboreName": "2G163-41-Wellbore-1", # 井筒名称
             "WellID": well_id,  # 引用上一步生成的Well ID
-            "Status": "Active"
+            "Status": "Active" # 井筒状态（枚举值：Active/Abandoned等）
         }
     }
     
-    storage_url = "https://<OSDU_ENDPOINT>/api/storage/v2/records"
+    storage_url = f"https://{OSDU_ENDPOINT}/api/storage/v2/records"
     response = requests.post(storage_url, json={"records": [wellbore_data]}, headers=headers)
     
     if response.status_code == 201:
@@ -88,14 +89,16 @@ def create_wellbore(token, partition_id, well_id):
 # 4. 主流程
 if __name__ == "__main__":
     # 配置参数
-    client_id = "<YOUR_CLIENT_ID>"
-    client_secret = "<YOUR_CLIENT_SECRET>"
-    tenant_id = "<YOUR_TENANT_ID>"
-    partition_id = "<DATA_PARTITION_ID>"
-    osdu_endpoint = "your-instance.energy.azure.com"  # 替换为实际端点
+    # 配置 Keycloak 信息
+    auth_url = "http://keycloak.osdu.rewant.cn/realms/osdu/protocol/openid-connect/token"
+    client_id = "osdu-admin"
+    client_secret = "hsN7IM8AGLTSBksQ"
+    partition_id = "osdu"
+    OSDU_ENDPOINT = "osdu.osdu.rewant.cn"  
     
     # 获取令牌
-    token = get_access_token(client_id, client_secret, tenant_id)
+    token = get_access_token(auth_url, client_id, client_secret)
+    print(token)
     
     # 创建Well并获取ID
     well_id = create_well(token, partition_id)
