@@ -42,7 +42,7 @@ try:
     )
     response.raise_for_status()
     access_token = response.json().get("access_token")
-    # print("Access Token:", access_token)
+    print("Access Token:", access_token)
 except requests.exceptions.RequestException as e:
     print(f"Error: {e}")
     print("Response Content:", response.text)

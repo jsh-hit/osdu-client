@@ -1,7 +1,6 @@
 import requests
 
 
-
 # 1. 获取访问令牌
 def get_access_token(auth_url, client_id, client_secret):
     # 发送请求
@@ -35,7 +34,7 @@ def create_well(token, partition_id):
         "kind": "osdu:wks:well--Well:1.0.0",  # 引用OSDU Schema服务定义的Well类型
         "acl": {"viewers": [f"data.default.viewers@{partition_id}"]},  # 访问控制，关联Entitlements服务
         "legal": {
-            "legaltags": ["global-public-1"],  # 法律标签，需在Legal服务中预注册
+            "legaltags": ["osdu-demo-legaltag-001"],  # 法律标签，需在Legal服务中预注册
             "otherRelevantDataCountries": ["US"]  # 数据相关国家
         },
         "data": {
@@ -49,7 +48,7 @@ def create_well(token, partition_id):
     }
     
     storage_url = f"https://{OSDU_ENDPOINT}/api/storage/v2/records"
-    response = requests.post(storage_url, json={"records": [well_data]}, headers=headers)
+    response = requests.put(storage_url, json={"records": [well_data]}, headers=headers, verify=False)
     
     if response.status_code == 201:
         return response.json()["recordIds"][0]  # 返回生成的Well ID
@@ -68,7 +67,7 @@ def create_wellbore(token, partition_id, well_id):
         "kind": "osdu:wks:wellbore--Wellbore:1.0.0", # Wellbore类型标识
         "acl": {"viewers": [f"data.default.viewers@{partition_id}"]},
         "legal": {
-            "legaltags": ["global-public-1"], 
+            "legaltags": ["osdu-demo-legaltag-001"], 
             "otherRelevantDataCountries": ["US"]
         },
         "data": {
@@ -79,7 +78,7 @@ def create_wellbore(token, partition_id, well_id):
     }
     
     storage_url = f"https://{OSDU_ENDPOINT}/api/storage/v2/records"
-    response = requests.post(storage_url, json={"records": [wellbore_data]}, headers=headers)
+    response = requests.post(storage_url, json={"records": [wellbore_data]}, headers=headers, verify=False)
     
     if response.status_code == 201:
         return response.json()["recordIds"][0]  # 返回生成的Wellbore ID
