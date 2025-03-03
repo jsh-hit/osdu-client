@@ -24,60 +24,50 @@ def get_access_token(auth_url, client_id, client_secret):
         print("Response Content:", response.text)
     return access_token
 
+def create_records(token):
 
-def create_legal_tag(token,partition_id):
-    url = f"{OSDU_BASE_URL}/api/legal/v1/legaltags"
+    with open("traces.json") as f:
+        well_data = json.load(f)
+
+    url =  f"{OSDU_BASE_URL}/api/storage/v2/records"
     print("url:",url)
-    
+
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json",
         "data-partition-id": partition_id
     }
-    
-    legal_tag_body = {
-        "name": "demo-legaltag-001",  # Legal Tag名称
-        "description": "Demo legal tag for test well data",
-        "properties": {
-            "contractId": "123456",
-            "countryOfOrigin": ["US"],           # 合规性国家代码
-            "expirationDate": "2025-12-25",      # 失效日期
-            "dataType": "Public Domain Data",
-            "originator": "demo-user-001",       # 创建者标识, 发起人
-            "securityClassification": "Private", # 保密等级
-            "exportClassification": "EAR99", 
-            "personalData": "No Personal Data",
+
+    records_boby = {
+        "kind": "osdu:demo-test:wks:wellbore:1.0.0",
+        "acl": {
+            "viewers": ['data.default.viewers@common.[osdu.opengroup.org]'],
+            "owners": ['data.default.owners@common.[osdu.opengroup.org]']
+        },
+        "legal": {
+            "legaltags": ['demo-legaltag-001'],
+            "otherRelevantDataCountries": ["US","CN"]
+        },
+        "data": {
+            "MD": 150.0,
+            "X": 648557.0,
+            "Y": 5162508.0,
+            "Z": 1.1,
+            "TVD": 150.0,
+            "DX": 0.0,
+            "DY": 0.0,
+            "AZIM": 183.67,
+            "INCL": 0.5,
+            "DLS": 0.0
         }
     }
 
-    response = requests.post(url, headers=headers, json=legal_tag_body)
-    
-    if response.status_code == 201:
-        print("Legal Tag创建成功！")
-        print(json.dumps(response.json(), indent=2))
-    else:
-        print(f"错误 {response.status_code}: {response.text}")
-
-# 查询LegalTag
-def get_legal_tag(token,partition_id):
-    url = f"{OSDU_BASE_URL}/api/legal/v1/legaltags"
-    print("url:",url)
-    
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json",
-        "data-partition-id": partition_id
-    }
-    response = requests.get(url, headers=headers)
-    
+    response = requests.put(url, headers=headers, json=records_boby)
     if response.status_code == 200:
-        print("Legal Tag查询成功！")
+        print("records创建成功！")
         print(json.dumps(response.json(), indent=2))
     else:
         print(f"错误 {response.status_code}: {response.text}")
-
-
-
 
 if __name__ == "__main__":
     # 配置参数
@@ -91,11 +81,5 @@ if __name__ == "__main__":
     # 获取令牌
     token = get_access_token(auth_url, client_id, client_secret)
     print(token)
-
-    # 执行创建
-    # create_legal_tag(token,partition_id)
-
-    # 查询legalTag
-    get_legal_tag(token,partition_id)
-
+    create_records(token=token)
 

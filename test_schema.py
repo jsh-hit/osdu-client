@@ -24,8 +24,8 @@ def get_access_token(auth_url, client_id, client_secret):
         print("Response Content:", response.text)
     return access_token
 
-def search_schema(token):
-    url = f"{OSDU_BASE_URL}/api/schema-service/v1/schema"
+def search_schema(token, schema_id):
+    url = f"{OSDU_BASE_URL}/api/schema-service/v1/schema/{schema_id}"
     print("url:",url)
 
     headers = {
@@ -150,6 +150,6 @@ if __name__ == "__main__":
     token = get_access_token(auth_url, client_id, client_secret)
     print(token)
 
-    # search_schema(token=token)
+    search_schema(token=token,schema_id="demo-test:wks:wellbore:1.0.0")
 
-    create_schema(token)
+    # create_schema(token)
