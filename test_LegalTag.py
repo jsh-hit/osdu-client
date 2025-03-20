@@ -84,7 +84,7 @@ if __name__ == "__main__":
     # 配置 Keycloak 信息
     auth_url = "http://keycloak.osdu.rewant.cn/realms/osdu/protocol/openid-connect/token"
     client_id = "osdu-admin"
-    client_secret = "hsN7IM8AGLTSBksQ"
+    client_secret = "HujnQMq0QwpWRPYO"
     partition_id = "osdu"
     OSDU_BASE_URL = "http://osdu.osdu.rewant.cn"  
     
