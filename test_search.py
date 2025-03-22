@@ -25,11 +25,12 @@ def get_access_token(auth_url, client_id, client_secret):
     return access_token
 
 def search_query(token):
-    record_id = "osdu:wellbore:8cd5191ea5544d43bf1b8258475f8731"
+    record_id = "osdu:wellbore:389595731c6141d2992fe23723b69170"
     url = f"{OSDU_BASE_URL}/api/search/v2/query"
-    # url = f"{OSDU_BASE_URL}/api/search/v2/records/{record_id}"
+    # url = f"{OSDU_BASE_URL}/api/storage/v2/records/{record_id}"
     print("url:",url)
     headers = {
+        "accept": "application/json",
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json",
         "data-partition-id": partition_id
@@ -52,7 +53,7 @@ if __name__ == "__main__":
     # 配置 Keycloak 信息
     auth_url = "http://keycloak.osdu.rewant.cn/realms/osdu/protocol/openid-connect/token"
     client_id = "osdu-admin"
-    client_secret = "HujnQMq0QwpWRPYO"
+    client_secret = "adkjeNmF0sstdFOT"
     partition_id = "osdu"
     OSDU_BASE_URL = "http://osdu.osdu.rewant.cn"  
     

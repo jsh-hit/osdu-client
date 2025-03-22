@@ -37,7 +37,7 @@ def create_records(token):
     }
 
     records_body =[ {
-        "kind": "demo-test:wks:wellbore:1.0.0",
+        "kind": "test:wks:wellbore:1.0.0",
         "acl": {
             "viewers": ['data.default.viewers@osdu.group'],
             "owners": ['data.default.owners@osdu.group']
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     # 配置 Keycloak 信息
     auth_url = "http://keycloak.osdu.rewant.cn/realms/osdu/protocol/openid-connect/token"
     client_id = "osdu-admin"
-    client_secret = "HujnQMq0QwpWRPYO"
+    client_secret = "adkjeNmF0sstdFOT"
     partition_id = "osdu"
     OSDU_BASE_URL = "http://osdu.osdu.rewant.cn"  
     

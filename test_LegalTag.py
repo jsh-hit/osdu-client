@@ -84,7 +84,7 @@ if __name__ == "__main__":
     # 配置 Keycloak 信息
     auth_url = "http://keycloak.osdu.rewant.cn/realms/osdu/protocol/openid-connect/token"
     client_id = "osdu-admin"
-    client_secret = "HujnQMq0QwpWRPYO"
+    client_secret = "adkjeNmF0sstdFOT"
     partition_id = "osdu"
     OSDU_BASE_URL = "http://osdu.osdu.rewant.cn"  
     
@@ -93,9 +93,9 @@ if __name__ == "__main__":
     print(token)
 
     # 执行创建
-    # create_legal_tag(token,partition_id)
+    create_legal_tag(token,partition_id)
 
     # 查询legalTag
-    get_legal_tag(token,partition_id)
+    # get_legal_tag(token,partition_id)
 
 
