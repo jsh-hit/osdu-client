@@ -24,64 +24,41 @@ def get_access_token(auth_url, client_id, client_secret):
         print("Response Content:", response.text)
     return access_token
 
-def create_records(token):
-
-    url =  f"{OSDU_BASE_URL}/api/storage/v2/records"
+def get_file_upload_url(token):
+    
+    url = f"{OSDU_BASE_URL}/api/file/v2/files/uploadURL"
     print("url:",url)
-
     headers = {
-        "Accept": "application/json",
+        "accept": "application/json",
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json",
         "data-partition-id": partition_id
     }
-
-    records_body =[ {
-        "kind": "demo-test:wks:wellbore:1.0.0",
-        "acl": {
-            "viewers": ['data.default.viewers@osdu.group'],
-            "owners": ['data.default.owners@osdu.group']
-        },
-        "legal": {
-            "legaltags": ['osdu-demo-legaltag-001'],
-            "otherRelevantDataCountries": ["US"]
-        },
-        "data": {
-            "MD": 150.0,
-            "X": 648557.0,
-            "Y": 5162508.0,
-            "Z": 1.1,
-            "TVD": 150.0,
-            "DX": 0.0,
-            "DY": 0.0,
-            "AZIM": 183.67,
-            "INCL": 0.5,
-        }
-    }]
-
-    response = requests.put(url, headers=headers, json=records_body)
-    if response.status_code == 201:
-        print("records创建成功！")
-        print(json.dumps(response.json(), indent=2))
-    else:
-        print(f"错误 {response.status_code}: {response.text}")
-
-def storage_search(token):
-    record_id = 'osdu:wellbore:00df0218d5da4eedbec074aea3322464'
-    url = f"{OSDU_BASE_URL}/api/storage/v2/records/{record_id}"
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json",
-        "data-partition-id": partition_id,
-    }
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
-        print("records查询成功！")
+        print("file upload url 获取成功！")
         print(json.dumps(response.json(), indent=2))
     else:
         print(f"错误 {response.status_code}: {response.text}")
 
+def upload_file_by_url(token,url):
+    url = f"{OSDU_BASE_URL}/api/file/v2/files/uploadURL"
+    print("url:",url)
+    headers = {
+        "accept": "application/json",
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+        "data-partition-id": partition_id
+    }
+    
+    response = requests.post(url, headers=headers)
+    # response = requests.get(url, headers=headers)
 
+    if response.status_code == 200:
+        print("获取成功！")
+        print(json.dumps(response.json(), indent=2))
+    else:
+        print(f"错误 {response.status_code}: {response.text}")
 
 if __name__ == "__main__":
     # 配置参数
@@ -95,6 +72,8 @@ if __name__ == "__main__":
     # 获取令牌
     token = get_access_token(auth_url, client_id, client_secret)
     print(token)
-    create_records(token=token)
-    # storage_search(token=token)
+    get_file_upload_url(token=token)
+
+    signed_url = "http://s3.192-168-31-240.nip.io/refi-osdu-staging-area/07046ace-6c2c-4faf-a978-4e348ee85775/4693ed88974c4b07a87368e323d57b6e?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=fileUser%2F20250324%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250324T123950Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=0843576382971285249a22cca0ab524f7fe0394d15a7b4be6174800561ad9447"
+    
 
