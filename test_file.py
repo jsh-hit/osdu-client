@@ -41,8 +41,9 @@ def get_file_upload_url(token):
     else:
         print(f"错误 {response.status_code}: {response.text}")
 
-def upload_file_by_url(token,url):
-    url = f"{OSDU_BASE_URL}/api/file/v2/files/uploadURL"
+
+def check(token):
+    url = f"{OSDU_BASE_URL}/api/file/v2/liveness_check"
     print("url:",url)
     headers = {
         "accept": "application/json",
@@ -51,14 +52,13 @@ def upload_file_by_url(token,url):
         "data-partition-id": partition_id
     }
     
-    response = requests.post(url, headers=headers)
-    # response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers)
 
     if response.status_code == 200:
-        print("获取成功！")
-        print(json.dumps(response.json(), indent=2))
+         print("服务正常！")
     else:
         print(f"错误 {response.status_code}: {response.text}")
+
 
 if __name__ == "__main__":
     # 配置参数
@@ -72,8 +72,29 @@ if __name__ == "__main__":
     # 获取令牌
     token = get_access_token(auth_url, client_id, client_secret)
     print(token)
-    get_file_upload_url(token=token)
+    # get_file_upload_url(token=token)
+    check(token)
 
-    signed_url = "http://s3.192-168-31-240.nip.io/refi-osdu-staging-area/07046ace-6c2c-4faf-a978-4e348ee85775/4693ed88974c4b07a87368e323d57b6e?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=fileUser%2F20250324%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250324T123950Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=0843576382971285249a22cca0ab524f7fe0394d15a7b4be6174800561ad9447"
+    signed_url = "http://s3.192-168-31-240.nip.io/refi-osdu-staging-area/4c9d13c4-4783-4b06-b019-bd9e2d0631f1/3a51364f9bfd404ea3fdf57649355de0?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=fileUser%2F20250331%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250331T120651Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=c10f4dbe5a5a3de0ea9a40facab385f82a11dde4584e041c763fb5e38f723433"
     
+    file_path = "D:\pyPrjs\osdu\osdu-client\\test_data\\2G163-41.dev"
 
+    try:
+        # 以二进制模式读取文件内容
+        with open(file_path, "rb") as file:
+            print("111")
+            response = requests.put(signed_url, files={'File': file})
+    
+        
+        # 发送PUT请求
+        
+        # 检查响应状态
+        if response.status_code == 201:
+            print("文件上传成功！")
+        else:
+            print(f"上传失败，状态码：{response.status_code}，错误信息：{response.text}")
+
+    except FileNotFoundError:
+        print(f"错误：文件路径不存在 - {file_path}")
+    except Exception as e:
+        print(f"请求异常：{str(e)}")

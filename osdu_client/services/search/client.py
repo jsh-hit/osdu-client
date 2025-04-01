@@ -155,8 +155,8 @@ class SearchClient(OSDUAPIClient):
         if offset is not None:
             request_data["offset"] = offset
 
-        if self.validation:
-            validate_data(request_data, QueryRequest)
+        # if self.validation:
+        #     validate_data(request_data, QueryRequest)
 
         url = urljoin(self.base_url, self.service_path, "query")
         response = requests.post(url, headers=headers, json=request_data)

@@ -56,6 +56,7 @@ def create_records(token):
             "DY": 0.0,
             "AZIM": 183.67,
             "INCL": 0.5,
+            "test":0.1
         }
     }]
 

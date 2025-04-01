@@ -20,6 +20,7 @@ class StorageClient(OSDUAPIClient):
     def update_records(
         self,
         *,
+        data,
         x_collaboration: str | None = None,
         skipdupes: bool | None = None,
         data_partition_id: str | None = None,
@@ -49,7 +50,7 @@ class StorageClient(OSDUAPIClient):
             params["skipdupes"] = skipdupes
 
         url = urljoin(self.base_url, self.service_path, "records")
-        response = requests.put(url, headers=headers, params=params)
+        response = requests.put(url, headers=headers, params=params, data=data)
         if not response.ok:
             raise StorageAPIError(response.text, response.status_code)
         return response.json()

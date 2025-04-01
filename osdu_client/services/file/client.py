@@ -72,7 +72,7 @@ class FileClient(OSDUAPIClient):
         if data_partition_id:
             headers["data-partition-id"] = data_partition_id
 
-        url = urljoin(self.base_url, self.service_path, "v2/files/uploadURL")
+        url = urljoin(self.base_url, self.service_path, "api/file/v2/files/uploadURL")
         response = requests.get(url, headers=headers)
         if not response.ok:
             raise FileAPIError(response.text, response.status_code)
@@ -129,7 +129,7 @@ class FileClient(OSDUAPIClient):
         if self.validation:
             validate_data(request_data, Record)
 
-        url = urljoin(self.base_url, self.service_path, "v2/files/metadata")
+        url = urljoin(self.base_url, self.service_path, "api/file/v2/files/metadata")
         response = requests.post(url, headers=headers, json=request_data)
         if not response.ok:
             raise FileAPIError(response.text, response.status_code)
@@ -216,7 +216,7 @@ class FileClient(OSDUAPIClient):
         if expiry_time is not None:
             params["expiryTime"] = expiry_time
 
-        url = urljoin(self.base_url, self.service_path, "v2/files/%s/downloadURL" % id)
+        url = urljoin(self.base_url, self.service_path, "api/file/v2/files/%s/downloadURL" % id)
         response = requests.get(url, headers=headers, params=params)
         if not response.ok:
             raise FileAPIError(response.text, response.status_code)
